@@ -4,13 +4,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
+
+import javax.security.auth.callback.CallbackHandler;
 
 import de.thro.inf.prg3.a07.api.OpenMensaAPI;
 import de.thro.inf.prg3.a07.model.Meal;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -24,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class OpenMensaAPITests {
 
     private static final Logger logger = Logger.getLogger(OpenMensaAPITests.class.getName());
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private OpenMensaAPI openMensaAPI;
 
     @BeforeEach
@@ -47,12 +56,18 @@ public class OpenMensaAPITests {
 
     @Test
     public void testGetMeals() throws IOException {
+    	List<Meal> meals;
+
         // TODO prepare call
+		Call<List<Meal>> mealCall = openMensaAPI.getMeals(sdf.format(new Date()));
 
         // TODO execute the call synchronously
+		Response<List<Meal>> mealResponse = mealCall.execute();
+
+
 
         // TODO unwrap the body
-        List<Meal> meals = null;
+		meals = mealResponse.body();
 
         assertNotNull(meals);
         assertNotEquals(0, meals.size());
