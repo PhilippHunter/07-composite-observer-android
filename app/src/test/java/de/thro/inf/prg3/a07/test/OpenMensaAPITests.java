@@ -76,5 +76,26 @@ public class OpenMensaAPITests {
             logger.info(m.toString());
         }
     }
+    @Test
+	void testGetMeals2() throws IOException {
+    	logger.info("TESTING THE LOGGER");
+		Call<List<Meal>> mealCall = openMensaAPI.getMeals(sdf.format(new Date()));
+		mealCall.enqueue(new Callback<List<Meal>>() {
+			@Override
+			public void onResponse(Call<List<Meal>> call, Response<List<Meal>> response) {
+				if (!response.isSuccessful()) return;
+				if (response.body() == null) return;
+
+				logger.info("SUCCESS");
+				logger.info(response.body().toString());
+			}
+
+			@Override
+			public void onFailure(Call<List<Meal>> call, Throwable t) {
+				logger.info("FAILED");
+				logger.info(call.toString());
+			}
+		});
+	}
 
 }

@@ -24,26 +24,33 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
 	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-	private Retrofit retrofit = new Retrofit.Builder()
-		.addConverterFactory(GsonConverterFactory.create())
-		.baseUrl("http://openmensa.org/api/v2/")
-		.build();
+	private OpenMensaAPI openMensaAPI;
 
-	private OpenMensaAPI openMensaAPI = retrofit.create(OpenMensaAPI.class);
-
-	ListView listView = findViewById(R.id.listMeals);
-	Button btnRefresh = findViewById(R.id.btnRefresh);
-	Switch swVegetarian = findViewById(R.id.swVegetarian);
+	ListView listView;
+	Button btnRefresh;
+	Switch swVegetarian;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Retrofit retrofit = new Retrofit.Builder()
+			.addConverterFactory(GsonConverterFactory.create())
+			.baseUrl("http://openmensa.org/api/v2/")
+			.build();
+
+		openMensaAPI = retrofit.create(OpenMensaAPI.class);
+
+
 		// this will inflate the layout from res/layout/activity_main.xml
 		setContentView(R.layout.activity_main);
 
 		// add your code here
+		listView = findViewById(R.id.listMeals);
+		btnRefresh = findViewById(R.id.btnRefresh);
+		swVegetarian = findViewById(R.id.swVegetarian);
+
 		listView.setAdapter(new ArrayAdapter<>(
 			MainActivity.this,
 			R.layout.meal_entry,
@@ -71,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
 			@Override
 			public void onFailure(Call<List<Meal>> call, Throwable t) {
+				Log.i("Fail", call.toString());
 				listView.setAdapter(new ArrayAdapter<>(MainActivity.this,
 					R.layout.meal_entry,
 					new String[]{"Fail"})
